@@ -1,14 +1,23 @@
 package chess;
 
 public class Board {
+	public static final int SIZE = 8;
 	private Piece[][] board;	
 	
 	public Board() {
-		board = new Piece[8][8];
+		board = new Piece[SIZE][SIZE];
+	}
+	
+	public boolean validPos(Position pos) {
+		if(pos.getCol() >= 0 && pos.getRow() >= 0 && pos.getCol() < SIZE && pos.getRow() < SIZE) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void setUpBoard() {
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < SIZE; i++) {
 			board[1][i] = new Pawn(new Position(1,i), Color.BLACK);
 		}
 		board[0][1] = new Knight(new Position(0,1), Color.BLACK);
@@ -20,7 +29,7 @@ public class Board {
 		board[0][3] = new Queen(new Position(0,3), Color.BLACK);
 		board[0][4] = new King(new Position(0,4), Color.BLACK);
 		
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < SIZE; i++) {
 			board[6][i] = new Pawn(new Position(6,i), Color.WHITE);
 		}
 		
@@ -38,10 +47,18 @@ public class Board {
 		return board[pos.getRow()][pos.getCol()];
 	}
 	
+	public Piece getPieceAt(int row, int col) {
+		return board[row][col];
+	}
+	
+	public void addPieceAt(Piece p) {
+		board[p.getPos().getRow()][p.getPos().getCol()] = p;
+	}
+	
 	
 	public void printBoard() {
-		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++) {
+		for(int i = 0; i < SIZE; i++) {
+			for(int j = 0; j < SIZE; j++) {
 				System.out.print("[" + board[i][j] + "]");
 			}
 			System.out.println("");
