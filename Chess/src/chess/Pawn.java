@@ -34,6 +34,18 @@ public class Pawn extends Piece {
 			}
 		}
 		
+		for(int i = 1; i > -2 ; i -= 2) {
+	        int row = pos.getRow() + (1 * s);
+	        int col = pos.getCol() + i;
+	        if(board.validPos(new Position(row, col))) {
+	        	Position endPos = new Position(row, col);
+	            Piece piece = board.getPieceAt(endPos);
+	            if (piece.getColor() != color) {
+	                moves.add(new Move(this, pos, endPos));
+	            }
+	        }
+		}
+		
 		return moves;
 	}
 	
