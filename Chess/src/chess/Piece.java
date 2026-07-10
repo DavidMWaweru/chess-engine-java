@@ -18,6 +18,10 @@ public abstract class Piece {
 		return pos;
 	}
 	
+	public Color getColor() {
+		return color;
+	}
+	
 	public void setPos(Position newPosition) {
 		pos = newPosition;
 	}
@@ -38,6 +42,9 @@ public abstract class Piece {
 	            if (piece == null) {
 	                moves.add(new Move(this, pos, endPos));
 	            } else {
+	            	if(color != piece.getColor()) {
+	            		moves.add(new Move(this, pos, endPos));
+	            	}
 	                break;
 	            }
 
@@ -61,9 +68,9 @@ public abstract class Piece {
 		            Piece piece = board.getPieceAt(endPos);
 		            if (piece == null) {
 		                moves.add(new Move(this, pos, endPos));
-		            } else {
-		                break;
-		            }
+		            } else if(color != piece.getColor()) {
+	            		moves.add(new Move(this, pos, endPos));
+	            	}
 		        }
 		 }
 		return moves;
