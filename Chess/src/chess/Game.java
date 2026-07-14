@@ -9,7 +9,7 @@ public class Game {
 		live = true;
 		whitesTurn = true;
 		board = new Board();
-		//board.setUpBoard();
+		board.setUpBoard();
 	}
 	
 	public Board getBoard() {

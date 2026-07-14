@@ -14,7 +14,14 @@ public class Queen extends Piece {
 		super(pos,color);
 	}
 	
+	public Queen(Position pos, Color color, int moveCount) {
+		super(pos, color, moveCount);
+	}
 	
+	@Override
+	public Piece copy() {
+	    return new Queen(pos, color, moveCount);
+	}
 	
 	@Override
 	public List<Move> getPseudoLegalMoves(Board board){

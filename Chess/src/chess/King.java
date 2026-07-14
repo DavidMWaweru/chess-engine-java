@@ -13,6 +13,14 @@ public class King extends Piece {
 		super(pos,color);
 	}
 	
+	public King(Position pos, Color color, int moveCount) {
+		super(pos, color, moveCount);
+	}
+	
+	@Override
+	public Piece copy() {
+	    return new King(pos, color, moveCount);
+	}
 	
 	@Override
 	public List<Move> getPseudoLegalMoves(Board board){

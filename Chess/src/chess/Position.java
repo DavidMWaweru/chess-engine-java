@@ -1,5 +1,8 @@
 package chess;
 
+
+
+//this class must be immutable
 public class Position {
 	private int row;
 	private int col;

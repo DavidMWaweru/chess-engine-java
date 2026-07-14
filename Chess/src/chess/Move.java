@@ -13,7 +13,17 @@ public class Move {
 		
 	}
 	
+	public Position getEndPos() {
+		return endPos;
+	}
 	
+	public Position getStartPos() {
+		return startPos;
+	}
+	
+	public Piece getPiece() {
+		return piece;
+	}
 	
 	
 	public String toString() {

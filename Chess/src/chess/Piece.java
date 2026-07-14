@@ -14,6 +14,14 @@ public abstract class Piece {
 		this.color = white;
 	}
 	
+	public Piece(Position pos, Color white, int moveCount) {
+		this.moveCount = moveCount;
+		this.pos = pos; 
+		this.color = white;
+	}
+	
+	public abstract Piece copy();
+	
 	public Position getPos() {
 		return pos;
 	}

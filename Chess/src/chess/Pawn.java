@@ -10,15 +10,19 @@ public class Pawn extends Piece {
 		super(pos,color);
 	}
 	
+	public Pawn(Position pos, Color color, int moveCount) {
+		super(pos, color, moveCount);
+	}
+	
+	@Override
+	public Piece copy() {
+	    return new Pawn(pos, color, moveCount);
+	}
+	
 	@Override
 	public List<Move> getPseudoLegalMoves(Board board){
 		List<Move> moves = new ArrayList<>();
-		int s;
-		if(color == Color.WHITE) {
-			s = -1;
-		} else {
-			s = 1;
-		}
+		int s = (color == Color.WHITE) ? -1 : 1;
 		
 		Position endpos = new Position(pos.getRow() + (1 * s), pos.getCol());
 		if (board.getPieceAt(endpos) == null) {
@@ -40,7 +44,7 @@ public class Pawn extends Piece {
 	        if(board.validPos(new Position(row, col))) {
 	        	Position endPos = new Position(row, col);
 	            Piece piece = board.getPieceAt(endPos);
-	            if (piece.getColor() != color) {
+	            if (piece != null && piece.getColor() != color) {
 	                moves.add(new Move(this, pos, endPos));
 	            }
 	        }

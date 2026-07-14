@@ -14,6 +14,15 @@ public class Knight extends Piece {
 		super(pos,color);
 	}
 	
+	public Knight(Position pos, Color color, int moveCount) {
+		super(pos, color, moveCount);
+	}
+	
+	@Override
+	public Piece copy() {
+	    return new Knight(pos, color, moveCount);
+	}
+	
 	@Override
 	public List<Move> getPseudoLegalMoves(Board board){
 		return getNonSlidingMoves(board, DIRECTIONS);

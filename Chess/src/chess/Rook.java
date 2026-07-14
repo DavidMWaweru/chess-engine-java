@@ -16,6 +16,15 @@ public class Rook extends Piece {
 		super(pos,color);
 	}
 	
+	public Rook(Position pos, Color color, int moveCount) {
+		super(pos, color, moveCount);
+	}
+	
+	@Override
+	public Piece copy() {
+	    return new Rook(pos, color, moveCount);
+	}
+	
 	@Override
 	public List<Move> getPseudoLegalMoves(Board board){
 		return getSlidingMoves(board, DIRECTIONS);
