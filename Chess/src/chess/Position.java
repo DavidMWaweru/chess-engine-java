@@ -27,6 +27,18 @@ public class Position {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+	    if (!(obj instanceof Position)) {
+	        return false;
+	    }
+
+	    Position other = (Position) obj;
+
+	    return row == other.row
+	        && col == other.col;
+	}
+	
+	@Override
 	public String toString() {
 		return convertToNoation();
 	}

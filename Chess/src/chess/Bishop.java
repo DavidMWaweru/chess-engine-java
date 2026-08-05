@@ -16,13 +16,13 @@ public class Bishop extends Piece {
 		super(pos,color);
 	}
 	
-	public Bishop(Position pos, Color color, int moveCount) {
-		super(pos, color, moveCount);
+	public Bishop(Position pos, Color color, boolean hasMoved) {
+		super(pos, color, hasMoved);
 	}
 	
 	@Override
 	public Piece copy() {
-	    return new Bishop(pos, color, moveCount);
+	    return new Bishop(pos, color, hasMoved);
 	}
 	
 	@Override

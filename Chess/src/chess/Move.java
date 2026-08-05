@@ -5,12 +5,24 @@ public class Move {
 	private Position startPos;
 	private Position endPos;
 	private Piece piece;
+	private MoveType moveType;
 	
-	public Move(Piece piece, Position startPos, Position endPos) {
+	public Move(Piece piece, Position startPos, Position endPos, MoveType moveType) {
+		this.moveType = moveType;
 		this.piece = piece;
 		this.startPos = startPos;
 		this.endPos = endPos;
 		
+	}
+	
+	public Move(Position startPos, Position endPos) {
+		this.startPos = startPos;
+		this.endPos = endPos;
+		
+	}
+	
+	public MoveType getMoveType() {
+		return moveType;
 	}
 	
 	public Position getEndPos() {
@@ -25,8 +37,25 @@ public class Move {
 		return piece;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+	    if (!(obj instanceof Move)) {
+	        return false;
+	    }
+
+	    Move other = (Move) obj;
+
+	    return startPos.equals(other.startPos)
+	        && endPos.equals(other.endPos);
+	}
+	
 	
 	public String toString() {
+		if(moveType == MoveType.CASTLE_KINGSIDE) {
+			return "O-O";
+		} else if (moveType == MoveType.CASTLE_QUEENSIDE) {
+			return "O-O-O";
+		}
 		return "" + piece + " from " + startPos + " to " + endPos;
 	}
 }

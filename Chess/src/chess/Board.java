@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Board {
 	public static final int SIZE = 8;
+	public static final String BG_YELLOW = "\u001B[43m";
+	public static final String RESET  = "\u001B[0m";
 	
 	public static final int[][] bishopDirections = {
 		    {-1,-1},
@@ -31,6 +33,15 @@ public class Board {
 		};
 	
 	private Piece[][] board;	
+	private Move lastMove;
+	
+	public Move getLastMove() {
+		return lastMove;
+	}
+	
+	public void setLastMove(Move lastMove) {
+		this.lastMove = lastMove;
+	}
 	
 	public Board() {
 		board = new Piece[SIZE][SIZE];
@@ -89,6 +100,7 @@ public class Board {
 	
 	public Board makeCopy() {
 		Board copyBoard = new Board();
+		copyBoard.setLastMove(lastMove);
 	    for (int row = 0; row < SIZE; row++) {
 	        for (int col = 0; col < SIZE; col++) {
 	        	Piece piece = board[row][col];
@@ -109,11 +121,11 @@ public class Board {
 		return board[row][col];
 	}
 	
-	private void setPieceAt(Position pos, Piece piece) {
+	public void setPieceAt(Position pos, Piece piece) {
 		board[pos.getRow()][pos.getCol()] = piece;
 	}
 	
-	private void setPieceAt(int row, int col, Piece piece) {
+	public void setPieceAt(int row, int col, Piece piece) {
 		board[row][col] = piece;
 	}
 	
@@ -121,17 +133,56 @@ public class Board {
 		board[p.getPos().getRow()][p.getPos().getCol()] = p;
 	}
 	
+	private boolean canCastleLegal(Move move) {
+		List<Move> movesToCheck = new ArrayList<>();
+		King king = (King) move.getPiece();
+		int row = king.getPos().getRow();
+		
+		if(isKingInCheck(king)){
+			return false;
+		}
+		
+		movesToCheck.add(move);
+		if(move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
+			movesToCheck.add(new Move(king,king.getPos(),new Position(row,5),MoveType.NORMAL));
+		} else {
+			movesToCheck.add(new Move(king,king.getPos(),new Position(row,3),MoveType.NORMAL));
+		}
+		
+		for (Move tempMove : movesToCheck) {
+			Board copy = makeCopy();
+			King copyKing = (King) copy.getPieceAt(row, 4);
+			copy.movePiece(tempMove);
+			if(copy.isKingInCheck(copyKing)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public List<Move> getAllPieceLegalMoves(Piece piece){
 		List<Move> legalMoves = new ArrayList<>();
 		List<Move> pseudoLegalMoves = piece.getPseudoLegalMoves(this);
-		King king = findKing(piece.getColor());
+		
+		
 		
 		for (Move move : pseudoLegalMoves) {
-			Board copy = makeCopy();
-			copy.movePiece(move);
-			if(!copy.isKingInCheck(king)) {
-				legalMoves.add(move);
+			if(move.getMoveType() != MoveType.CASTLE_KINGSIDE && move.getMoveType() != MoveType.CASTLE_QUEENSIDE) {
+				Board copy = makeCopy();
+				copy.movePiece(move);
+				
+				King copyKing = copy.findKing(piece.getColor());
+				
+				if(!copy.isKingInCheck(copyKing)) {
+					legalMoves.add(move);
+				}
+			} else {
+				if(canCastleLegal(move)) {
+					legalMoves.add(move);
+				}
 			}
+		
 		}
 		return legalMoves;
 	}
@@ -160,7 +211,7 @@ public class Board {
 		return legalMoves;
 	}
 	
-	private King findKing(Color color) {
+	public King findKing(Color color) {
 
 	    for (int row = 0; row < SIZE; row++) {
 	        for (int col = 0; col < SIZE; col++) {
@@ -268,30 +319,49 @@ public class Board {
 		return false;
 	}
 	
-	public void movePiece(Position endPos, Piece piece) {
-		List<Move> pseudoLegalMoves = piece.getPseudoLegalMoves(this);
-		for (Move move : pseudoLegalMoves) {
-			if(move.getEndPos() == endPos) {
-				//check for real legal moves
-				if(true) {
-					setPieceAt(move.getEndPos(), move.getPiece());
-					setPieceAt(move.getStartPos(), null);
-				}
-				break;
-			}
-		}
-	}
 	
 	public void movePiece(Move move) {
 		Piece piece = getPieceAt(move.getPiece().getPos());
 		Position endPos = move.getEndPos();
 		
+		if(move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
+			int row = endPos.getRow();
+			Piece rook = getPieceAt(row, 7);
+			setPieceAt(row, 5, rook);
+			setPieceAt(row, 7, null);
+			rook.setPos(new Position(row, 5));
+		} else if(move.getMoveType() == MoveType.CASTLE_QUEENSIDE) {
+			int row = endPos.getRow();
+			Piece rook = getPieceAt(row, 0);
+			setPieceAt(row, 3, rook);
+			setPieceAt(row, 0, null);
+			rook.setPos(new Position(row, 3));
+		}
+		
+		
 		setPieceAt(endPos, piece);
 		setPieceAt(move.getStartPos(), null);
 		piece.setPos(endPos);
 		
-		piece.moveCount = piece.moveCount + 1;
+		if(move.getMoveType() == MoveType.EN_PASSANT) {
+			int s = (move.getPiece().getColor() == Color.WHITE) ? -1 : 1;
+			int row = move.getEndPos().getRow() + s;
+			int col = move.getEndPos().getCol();
+			setPieceAt(row, col, null);
+			
+		}
+		
+		piece.hasMoved = true;
+		
+		//checks for pawn promotion 
+		if(move.getMoveType() == MoveType.PROMOTION) {
+			Pawn p = (Pawn) piece;
+			setPieceAt(endPos, p.promote(PieceType.QUEEN));
+		}
+		lastMove = move;
 	}
+	
+	
 	
 	
 	public void printBoard() {
@@ -301,6 +371,48 @@ public class Board {
 			}
 			System.out.println("");
 		}
+		
+	}
+	
+	public void printBoardForPlayer() {
+		
+		int startRow = 0;
+		int startCol = 0;
+		int endRow = 0;
+		int endCol = 0;
+		if(lastMove != null) {
+			startRow = lastMove.getStartPos().getRow();
+			startCol = lastMove.getStartPos().getCol();
+			endRow = lastMove.getEndPos().getRow();
+			endCol = lastMove.getEndPos().getCol();
+		}
+
+		System.out.println("    a  b  c  d  e  f  g  h");
+		for(int i = 0; i < SIZE; i++) {
+			for(int j = 0; j < SIZE; j++) {
+				if(j == 0) {
+					System.out.print((8 - i) + " | ");
+				}
+				if( lastMove != null && ((i == startRow && j == startCol) || (i == endRow && j == endCol))) {
+					if(board[i][j] != null) {
+						System.out.print(BG_YELLOW + board[i][j].getSymbol() + RESET + " ");
+					} else {
+						System.out.print(BG_YELLOW + ".." + RESET + " ");
+					}
+				} else {
+					if(board[i][j] != null) {
+						System.out.print(board[i][j].getSymbol() + " ");
+					} else {
+						System.out.print(".." + " ");
+					}
+				}
+				if(j == 7) {
+					System.out.print("| " + (8 - i));
+				}
+			}
+			System.out.println("");
+		}
+		System.out.println("    a  b  c  d  e  f  g  h");
 		
 	}
 }

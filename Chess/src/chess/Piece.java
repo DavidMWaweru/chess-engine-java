@@ -6,21 +6,29 @@ public abstract class Piece {
 
 	protected Position pos;
 	protected Color color;
-	protected int moveCount;
+	protected boolean hasMoved;
 	
 	public Piece(Position pos, Color white) {
-		moveCount = 0;
+		hasMoved = false;
 		this.pos = pos; 
 		this.color = white;
 	}
 	
-	public Piece(Position pos, Color white, int moveCount) {
-		this.moveCount = moveCount;
+	public Piece(Position pos, Color white, boolean hasMoved) {
+		this.hasMoved = hasMoved;
 		this.pos = pos; 
 		this.color = white;
 	}
 	
 	public abstract Piece copy();
+	
+	public boolean hasMoved() {
+		return hasMoved;
+	}
+	
+	public void setHasMoved(boolean hasMoved) {
+		this.hasMoved = hasMoved;
+	}
 	
 	public Position getPos() {
 		return pos;
@@ -32,6 +40,25 @@ public abstract class Piece {
 	
 	public void setPos(Position newPosition) {
 		pos = newPosition;
+	}
+	
+	public String getSymbol() {
+		char colorLetter;
+		char pieceLetter = 'x';
+		if(color == Color.WHITE) {
+			colorLetter = 'W';
+		}  else {
+			colorLetter = 'B';
+		}
+		
+		if (this instanceof Pawn)   pieceLetter = 'P';
+		if (this instanceof Knight) pieceLetter = 'N';
+		if (this instanceof Bishop) pieceLetter = 'B';
+		if (this instanceof Rook)   pieceLetter = 'R';
+		if (this instanceof Queen)  pieceLetter = 'Q';
+		if (this instanceof King)   pieceLetter = 'K';
+		
+		return "" + colorLetter + pieceLetter;
 	}
 	
 	public abstract List<Move> getPseudoLegalMoves(Board board);
@@ -48,10 +75,10 @@ public abstract class Piece {
 	            Position endPos = new Position(row, col);
 	            Piece piece = board.getPieceAt(endPos);
 	            if (piece == null) {
-	                moves.add(new Move(this, pos, endPos));
+	                moves.add(new Move(this, pos, endPos, MoveType.NORMAL));
 	            } else {
 	            	if(color != piece.getColor()) {
-	            		moves.add(new Move(this, pos, endPos));
+	            		moves.add(new Move(this, pos, endPos, MoveType.CAPTURE));
 	            	}
 	                break;
 	            }
@@ -75,9 +102,9 @@ public abstract class Piece {
 		            Position endPos = new Position(row, col);
 		            Piece piece = board.getPieceAt(endPos);
 		            if (piece == null) {
-		                moves.add(new Move(this, pos, endPos));
+		                moves.add(new Move(this, pos, endPos, MoveType.NORMAL));
 		            } else if(color != piece.getColor()) {
-	            		moves.add(new Move(this, pos, endPos));
+	            		moves.add(new Move(this, pos, endPos, MoveType.CAPTURE));
 	            	}
 		        }
 		 }

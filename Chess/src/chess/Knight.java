@@ -14,13 +14,13 @@ public class Knight extends Piece {
 		super(pos,color);
 	}
 	
-	public Knight(Position pos, Color color, int moveCount) {
-		super(pos, color, moveCount);
+	public Knight(Position pos, Color color, boolean hasMoved) {
+		super(pos, color, hasMoved);
 	}
 	
 	@Override
 	public Piece copy() {
-	    return new Knight(pos, color, moveCount);
+	    return new Knight(pos, color, hasMoved);
 	}
 	
 	@Override

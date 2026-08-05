@@ -16,13 +16,13 @@ public class Rook extends Piece {
 		super(pos,color);
 	}
 	
-	public Rook(Position pos, Color color, int moveCount) {
-		super(pos, color, moveCount);
+	public Rook(Position pos, Color color, boolean hasMoved) {
+		super(pos, color, hasMoved);
 	}
 	
 	@Override
 	public Piece copy() {
-	    return new Rook(pos, color, moveCount);
+	    return new Rook(pos, color, hasMoved);
 	}
 	
 	@Override

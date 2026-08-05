@@ -14,13 +14,13 @@ public class Queen extends Piece {
 		super(pos,color);
 	}
 	
-	public Queen(Position pos, Color color, int moveCount) {
-		super(pos, color, moveCount);
+	public Queen(Position pos, Color color, boolean hasMoved) {
+		super(pos, color, hasMoved);
 	}
 	
 	@Override
 	public Piece copy() {
-	    return new Queen(pos, color, moveCount);
+	    return new Queen(pos, color, hasMoved);
 	}
 	
 	@Override
