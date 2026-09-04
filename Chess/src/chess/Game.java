@@ -44,6 +44,14 @@ public class Game {
 		return false;
 	}
 	
+	public boolean checkForProgress() {
+		if(board.getNoProgressCounter() >= 100) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean makeMove(Move move) {
 		Color color = (whitesTurn) ? Color.WHITE : Color.BLACK;
 		List<Move> tempList = board.getAllLegalMoves(color);

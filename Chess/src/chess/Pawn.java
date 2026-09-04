@@ -49,7 +49,7 @@ public class Pawn extends Piece {
 				Move temp = new Move(this, pos, endpos, MoveType.PROMOTION);
 				moves.add(temp);
 			} else {
-				Move temp = new Move(this, pos, endpos, MoveType.NORMAL);
+				Move temp = new Move(this, pos, endpos, MoveType.PAWN);
 				moves.add(temp);
 			}
 		}
@@ -59,7 +59,7 @@ public class Pawn extends Piece {
 			Position endpos1 = new Position(pos.getRow() + (2 * s), pos.getCol());
 			Position endpos2 = new Position(pos.getRow() + (1 * s), pos.getCol());
 			if (board.getPieceAt(endpos1) == null && board.getPieceAt(endpos2) == null) {
-				Move temp = new Move(this, pos, endpos1, MoveType.NORMAL);
+				Move temp = new Move(this, pos, endpos1, MoveType.PAWN);
 				moves.add(temp);
 			}
 		}
@@ -71,7 +71,12 @@ public class Pawn extends Piece {
 	        	Position endPos = new Position(row, col);
 	            Piece piece = board.getPieceAt(endPos);
 	            if (piece != null && piece.getColor() != color) {
-	                moves.add(new Move(this, pos, endPos, MoveType.CAPTURE));
+	            	if(endPos.getRow() == 0 || endPos.getRow() == 7) {
+	            		moves.add(new Move(this, pos, endPos, MoveType.PROMOTION_CAPTURE));
+	            	} else {
+	            		moves.add(new Move(this, pos, endPos, MoveType.CAPTURE));
+	            	}
+	                
 	            }
 	        }
 		}

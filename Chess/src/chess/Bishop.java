@@ -30,5 +30,14 @@ public class Bishop extends Piece {
 		return getSlidingMoves(board, DIRECTIONS);
 	}
 	
+	public Color getSqaureColor() {
+		int temp = pos.getCol() + pos.getRow();
+		if(temp % 2 == 1) {
+			return Color.WHITE;
+		} else {
+			return Color.BLACK;
+		}
+	}
+	
 	
 }

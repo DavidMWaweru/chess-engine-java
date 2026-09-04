@@ -34,6 +34,7 @@ public class Board {
 	
 	private Piece[][] board;	
 	private Move lastMove;
+	private int noProgressCounter;
 	
 	public Move getLastMove() {
 		return lastMove;
@@ -45,6 +46,7 @@ public class Board {
 	
 	public Board() {
 		board = new Piece[SIZE][SIZE];
+		noProgressCounter = 0;
 	}
 	
 	public Piece[][] getBoard() {
@@ -53,6 +55,10 @@ public class Board {
 	
 	public void setBoard(Piece[][] newBoard) {
 		board = newBoard;
+	}
+	
+	public int getNoProgressCounter() {
+		return noProgressCounter;
 	}
 	
 	public boolean validPos(Position pos) {
@@ -131,6 +137,49 @@ public class Board {
 	
 	public void addPieceAt(Piece p) {
 		board[p.getPos().getRow()][p.getPos().getCol()] = p;
+	}
+	
+	public boolean checkForSufficientMaterial() {
+		List<Piece> knightsList = new ArrayList<>();
+		List<Piece> BishopsList = new ArrayList<>();
+	    for (int row = 0; row < SIZE; row++) {
+	        for (int col = 0; col < SIZE; col++) {
+
+	            Piece piece = board[row][col];
+	            if(piece != null && !(piece instanceof King)) {
+	            	if(piece instanceof Bishop) {
+	            		BishopsList.add((Bishop) piece);
+	            	} else if (piece instanceof Knight) {
+	            		knightsList.add((Knight) piece);
+	            	} else {
+	            		return true;
+	            	}
+	            }
+	        }
+	    }
+	    if(knightsList.size() + BishopsList.size() <= 2) {
+	    	if(knightsList.size() + BishopsList.size() <= 1) {
+	    		return false;
+	    	}
+	    	if(BishopsList.size() != 2) {
+	    		return true;
+	    	}
+	    	
+	    	//last check is if the bishops are same color or not check by adding rows and cols (should work i think)
+	    	
+	    	
+	    	if(BishopsList.size() == 2) {
+	    		Bishop b1 = (Bishop) BishopsList.get(0);
+	    		Bishop b2 = (Bishop) BishopsList.get(1);
+	    		if(b1.getSqaureColor() == b2.getSqaureColor()) {
+	    			return false;
+	    		} else {
+	    			return true;
+	    		}
+	    	}
+	    	
+	    }
+		return true;
 	}
 	
 	private boolean canCastleLegal(Move move) {
@@ -323,6 +372,16 @@ public class Board {
 	public void movePiece(Move move) {
 		Piece piece = getPieceAt(move.getPiece().getPos());
 		Position endPos = move.getEndPos();
+		noProgressCounter++;
+		
+		if(move.getMoveType() == MoveType.PAWN) {
+			noProgressCounter = 0;
+		}
+		
+		if(move.getMoveType() == MoveType.CAPTURE) {
+			noProgressCounter = 0;
+			
+		}
 		
 		if(move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
 			int row = endPos.getRow();
@@ -344,6 +403,7 @@ public class Board {
 		piece.setPos(endPos);
 		
 		if(move.getMoveType() == MoveType.EN_PASSANT) {
+			noProgressCounter = 0;
 			int s = (move.getPiece().getColor() == Color.WHITE) ? -1 : 1;
 			int row = move.getEndPos().getRow() + s;
 			int col = move.getEndPos().getCol();
@@ -354,7 +414,8 @@ public class Board {
 		piece.hasMoved = true;
 		
 		//checks for pawn promotion 
-		if(move.getMoveType() == MoveType.PROMOTION) {
+		if(move.getMoveType() == MoveType.PROMOTION || move.getMoveType() == MoveType.PROMOTION_CAPTURE) {
+			noProgressCounter = 0;
 			Pawn p = (Pawn) piece;
 			setPieceAt(endPos, p.promote(PieceType.QUEEN));
 		}
