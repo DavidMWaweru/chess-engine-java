@@ -7,4 +7,8 @@ public enum Color {
 	public String symbol() {
 		return this == WHITE ? "W" : "B";
 	}
+	
+	public Color opposite() {
+	    return this == WHITE ? BLACK : WHITE;
+	}
 }

@@ -107,6 +107,7 @@ public class Board {
 	public Board makeCopy() {
 		Board copyBoard = new Board();
 		copyBoard.setLastMove(lastMove);
+		copyBoard.noProgressCounter = noProgressCounter;
 	    for (int row = 0; row < SIZE; row++) {
 	        for (int col = 0; col < SIZE; col++) {
 	        	Piece piece = board[row][col];
@@ -137,6 +138,34 @@ public class Board {
 	
 	public void addPieceAt(Piece p) {
 		board[p.getPos().getRow()][p.getPos().getCol()] = p;
+	}
+	
+	public boolean checkForProgress() {
+		if(getNoProgressCounter() >= 100) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean checkForCheckmate(boolean whitesTurn) {
+		Color color = (whitesTurn) ? Color.WHITE : Color.BLACK;
+		if(isKingInCheck(findKing(color))) {
+			if(getAllLegalMoves(color).size() == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkForStalemate(boolean whitesTurn) {
+		Color color = (whitesTurn) ? Color.WHITE : Color.BLACK;
+		if(!isKingInCheck(findKing(color))) {
+			if(getAllLegalMoves(color).size() == 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean checkForSufficientMaterial() {
@@ -222,6 +251,11 @@ public class Board {
 				copy.movePiece(move);
 				
 				King copyKing = copy.findKing(piece.getColor());
+				King copyOppKing = copy.findKing(piece.getColor().opposite());
+				
+				if(copy.isKingInCheck(copyOppKing)) {
+					move.setCheck(true);
+				}
 				
 				if(!copy.isKingInCheck(copyKing)) {
 					legalMoves.add(move);

@@ -51,11 +51,11 @@ public class ConsoleUI {
 				case 1:
 					System.out.println("1");
 					whitePlayer = new HumanPlayer(scanner);
-					blackPlayer = new EnginePlayerV1(Color.BLACK);
+					blackPlayer = new EnginePlayerV2(Color.BLACK);
 					break;
 				case 2:
 					System.out.println("2");
-					whitePlayer = new EnginePlayerV1(Color.WHITE);
+					whitePlayer = new EnginePlayerV2(Color.WHITE);
 					blackPlayer = new HumanPlayer(scanner);
 					break;
 				case 3:
@@ -64,28 +64,28 @@ public class ConsoleUI {
 					int random = r.nextInt(2);
 					if(random == 1) {
 						whitePlayer = new HumanPlayer(scanner);
-						blackPlayer = new EnginePlayerV1(Color.BLACK);
+						blackPlayer = new EnginePlayerV2(Color.BLACK);
 					} else {
-						whitePlayer = new EnginePlayerV1(Color.WHITE);
+						whitePlayer = new EnginePlayerV2(Color.WHITE);
 						blackPlayer = new HumanPlayer(scanner);
 					}
 					
 					break;
 				default:
 					System.out.println("invaild input, try again:");	
-					whitePlayer = new EnginePlayerV1(Color.WHITE);
-					blackPlayer = new EnginePlayerV1(Color.BLACK);
+					whitePlayer = new EnginePlayerV2(Color.WHITE);
+					blackPlayer = new EnginePlayerV2(Color.BLACK);
 				}
 				break;
 			case 3:
 				System.out.println("3");
-				whitePlayer = new EnginePlayerV1(Color.WHITE);
-				blackPlayer = new EnginePlayerV1(Color.BLACK);
+				whitePlayer = new EnginePlayerV2(Color.WHITE);
+				blackPlayer = new EnginePlayerV2(Color.BLACK);
 				break;
 			default:
 				System.out.println("invaild input, try again:");	
-				whitePlayer = new EnginePlayerV1(Color.WHITE);
-				blackPlayer = new EnginePlayerV1(Color.BLACK);
+				whitePlayer = new EnginePlayerV2(Color.WHITE);
+				blackPlayer = new EnginePlayerV2(Color.BLACK);
 			}
 		
 		

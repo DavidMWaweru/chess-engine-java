@@ -24,6 +24,7 @@ public class Game {
 		return whitesTurn;
 	}
 	
+	
 	public boolean checkForCheckmate() {
 		Color color = (whitesTurn) ? Color.WHITE : Color.BLACK;
 		if(board.isKingInCheck(board.findKing(color))) {

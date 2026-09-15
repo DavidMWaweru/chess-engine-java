@@ -6,12 +6,14 @@ public class Move {
 	private Position endPos;
 	private Piece piece;
 	private MoveType moveType;
+	private boolean check;
 	
 	public Move(Piece piece, Position startPos, Position endPos, MoveType moveType) {
 		this.moveType = moveType;
 		this.piece = piece;
 		this.startPos = startPos;
 		this.endPos = endPos;
+		this.check = check;
 		
 	}
 	
@@ -21,8 +23,20 @@ public class Move {
 		
 	}
 	
+	public boolean givesCheck() {
+		return check;
+	}
+	
+	public void setCheck(boolean check) {
+		this.check = check;
+	}
+	
 	public MoveType getMoveType() {
 		return moveType;
+	}
+	
+	public void setMoveType(MoveType moveType) {
+		this.moveType = moveType;
 	}
 	
 	public Position getEndPos() {
