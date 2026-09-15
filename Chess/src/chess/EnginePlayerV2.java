@@ -14,7 +14,7 @@ public class EnginePlayerV2 implements Player {
     private static final int KING_VALUE = 0;
     private static final int ALPHA = Integer.MIN_VALUE;
     private static final int BETA =Integer.MAX_VALUE;
-    private static final int DEPTH = 6;
+    private static final int DEPTH = 4;
     
     private static final int[][] KNIGHT_TABLE = {
     	    {-10, -5,  0,  0,  0,  0, -5, -10},
