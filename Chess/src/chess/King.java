@@ -28,23 +28,17 @@ public class King extends Piece {
 
 	public boolean canPseudoCastle(Board board, boolean kingSide) {
 		int r = (color == Color.WHITE) ? 7 : 0;
-		if(!hasMoved) {
+		if(pos.equals(new Position(r, 4))) {
 			if(kingSide) {
 				if(board.getPieceAt(r,7) instanceof Rook) {
-					Rook Rook = (Rook) board.getPieceAt(r,7);
-					if(!Rook.hasMoved()) {
-						if (spaceBetweenKingAndRookClear(board,kingSide,color)) {
-							return true;
-						}
-					}			
+					if (spaceBetweenKingAndRookClear(board,kingSide,color)) {
+						return true;
+					}		
 				}
 			} else {
 				if(board.getPieceAt(r,0) instanceof Rook) {
-					Rook Rook = (Rook) board.getPieceAt(r,0);
-					if(!Rook.hasMoved()) {
-						if (spaceBetweenKingAndRookClear(board,kingSide,color)) {
-							return true;
-						}
+					if (spaceBetweenKingAndRookClear(board,kingSide,color)) {
+						return true;
 					}			
 				}
 			}

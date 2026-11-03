@@ -82,9 +82,9 @@ public class Pawn extends Piece {
 		}
 		
 		//checks for en passant
-		if(board.getLastMove() != null && board.getLastMove().getPiece() instanceof Pawn) {
-			if(Math.abs(board.getLastMove().getStartPos().getRow() - board.getLastMove().getEndPos().getRow()) == 2 && board.getLastMove().getStartPos().getCol() ==
-					board.getLastMove().getEndPos().getCol()) {
+		if(board.getLastMove() != null && board.getLastMove().getPiece() instanceof Pawn) { // was a pawn moved last move
+			if(Math.abs(board.getLastMove().getStartPos().getRow() - board.getLastMove().getEndPos().getRow()) == 2 // did the pawn move 2 sqaures last move
+					&& board.getLastMove().getStartPos().getCol() == board.getLastMove().getEndPos().getCol()) { // did is stay in the same col
 				for(int i = 1; i > -2 ; i -= 2) {
 			        int row = pos.getRow();
 			        int col = pos.getCol() + i;

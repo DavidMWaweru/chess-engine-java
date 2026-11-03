@@ -62,12 +62,12 @@ public class EnginePlayerV2 implements Player {
     
     private static final int[][] QUEEN_TABLE = {
     	    {-20, -10, -10,  -5,  -5, -10, -10, -20},
-    	    {-10,   0,   0,   0,   0,   0,   0, -10},
-    	    {-10,   0,   5,   5,   5,   5,   0, -10},
-    	    { -5,   0,   5,   5,   5,   5,   0,  -5},
-    	    {  0,   0,   5,   5,   5,   5,   0,  -5},
-    	    {-10,   5,   5,   5,   5,   5,   0, -10},
     	    {-10,   0,   5,   0,   0,   0,   0, -10},
+    	    {-10,   5,   5,   5,   5,   5,   0, -10},
+    	    {  0,   0,   5,   5,   5,   5,   0,  -5},
+    	    { -5,   0,   5,   5,   5,   5,   0,  -5},
+    	    {-10,   0,   5,   5,   5,   5,   0, -10},
+    	    {-10,   0,   0,   0,   0,   0,   0, -10},
     	    {-20, -10, -10,  -5,  -5, -10, -10, -20}
     	};
 
@@ -197,9 +197,9 @@ Color color;
 	public int minimax(Board board, int depth,int alpha, int beta, boolean whiteToPlay) {
 		if(board.checkForCheckmate(whiteToPlay)) {
 			if(whiteToPlay) {
-				return -100000 + depth;
+				return -100000 - depth;
 			} else {
-				return 100000 - depth;
+				return 100000 + depth;
 			}
 		} else if(board.checkForStalemate(whiteToPlay)) {
 			return 0;
@@ -260,10 +260,10 @@ Color color;
 	            
 	            if(piece.getColor() == Color.WHITE) {
 	            	i = 1;
-	            	tableRow = row;
+	            	tableRow = 7 - row;
 	            } else {
 	            	i = -1;
-	            	tableRow = 7 - row;
+	            	tableRow = row;
 	            }
 	            
 	            

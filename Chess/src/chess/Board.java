@@ -35,6 +35,10 @@ public class Board {
 	private Piece[][] board;	
 	private Move lastMove;
 	private int noProgressCounter;
+	private boolean whiteKingsideCastle = true;
+	private boolean whiteQueensideCastle = true;
+	private boolean blackKingsideCastle = true;
+	private boolean blackQueensideCastle = true;
 	
 	public Move getLastMove() {
 		return lastMove;
@@ -215,6 +219,25 @@ public class Board {
 		List<Move> movesToCheck = new ArrayList<>();
 		King king = (King) move.getPiece();
 		int row = king.getPos().getRow();
+		boolean isWhiteMove = move.getPiece().getColor() == Color.WHITE;
+		
+		if(isWhiteMove && move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
+			if(whiteKingsideCastle) {
+				return false;
+			}
+		} else if(isWhiteMove && move.getMoveType() == MoveType.CASTLE_QUEENSIDE) {
+			if(whiteQueensideCastle) {
+				return false;
+			}
+		} else if(!isWhiteMove && move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
+			if(blackKingsideCastle) {
+				return false;
+			}
+		} else {
+			if(blackQueensideCastle) {
+				return false;
+			}
+		}
 		
 		if(isKingInCheck(king)){
 			return false;
@@ -403,9 +426,18 @@ public class Board {
 	}
 	
 	
-	public void movePiece(Move move) {
+	
+	public UndoInfo movePiece(Move move) {
 		Piece piece = getPieceAt(move.getPiece().getPos());
 		Position endPos = move.getEndPos();
+		
+		boolean isWhiteMove = piece.getColor() == Color.WHITE;
+
+
+		
+		UndoInfo answer = new UndoInfo(getPieceAt(endPos),endPos, whiteKingsideCastle, whiteQueensideCastle, 
+				blackKingsideCastle, blackQueensideCastle, noProgressCounter, piece.getColor(), piece, lastMove);
+		
 		noProgressCounter++;
 		
 		if(move.getMoveType() == MoveType.PAWN) {
@@ -416,6 +448,30 @@ public class Board {
 			noProgressCounter = 0;
 			
 		}
+		
+	    if(piece instanceof King) {
+	    	if(isWhiteMove) {
+	    		whiteKingsideCastle = false;
+	    		whiteQueensideCastle = false;
+	    	} else {
+	    		blackKingsideCastle = false;
+	    		blackQueensideCastle = false;
+	    	}
+	    } else if(piece instanceof Rook) {
+	    	if(isWhiteMove) {
+	            if (move.getStartPos().getRow() == 7 && move.getStartPos().getCol() == 0) {
+	                whiteQueensideCastle = false;
+	            } else if (move.getStartPos().getRow() == 7 && move.getStartPos().getCol() == 7) {
+	                whiteKingsideCastle = false;
+	            }
+	    	} else {
+	            if (move.getStartPos().getRow() == 0 && move.getStartPos().getCol() == 0) {
+	                blackQueensideCastle = false;
+	            } else if (move.getStartPos().getRow() == 0 && move.getStartPos().getCol() == 7) {
+	                blackKingsideCastle = false;
+	            }
+	    	}
+	    }
 		
 		if(move.getMoveType() == MoveType.CASTLE_KINGSIDE) {
 			int row = endPos.getRow();
@@ -454,6 +510,7 @@ public class Board {
 			setPieceAt(endPos, p.promote(PieceType.QUEEN));
 		}
 		lastMove = move;
+		return null;
 	}
 	
 	
